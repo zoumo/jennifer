@@ -80,12 +80,12 @@ func ExampleFile_ImportName_conflict() {
 	//
 	// import (
 	// 	a "github.com/bar/a"
-	// 	a1 "github.com/foo/a"
+	// 	fooa "github.com/foo/a"
 	// )
 	//
 	// func main() {
 	// 	a.Bar()
-	// 	a1.Foo()
+	// 	fooa.Foo()
 	// }
 }
 
@@ -107,12 +107,12 @@ func ExampleFile_ImportAlias_conflict() {
 	//
 	// import (
 	// 	b "github.com/bar/b"
-	// 	b1 "github.com/foo/a"
+	// 	foob "github.com/foo/a"
 	// )
 	//
 	// func main() {
 	// 	b.Bar()
-	// 	b1.Foo()
+	// 	foob.Foo()
 	// }
 }
 
@@ -1061,13 +1061,13 @@ func ExampleNewFilePath() {
 	//
 	// import (
 	// 	f "d.e/f"
-	// 	f1 "g.h/f"
+	// 	ghf "g.h/f"
 	// )
 	//
 	// func init() {
-	// 	Foo()    // Local package - alias is omitted.
-	// 	f.Bar()  // Import is automatically added.
-	// 	f1.Baz() // Colliding package name is automatically renamed.
+	// 	Foo()     // Local package - alias is omitted.
+	// 	f.Bar()   // Import is automatically added.
+	// 	ghf.Baz() // Colliding package name is automatically renamed.
 	// }
 }
 
@@ -1204,13 +1204,13 @@ func ExampleQual_file() {
 	//
 	// import (
 	// 	f "d.e/f"
-	// 	f1 "g.h/f"
+	// 	ghf "g.h/f"
 	// )
 	//
 	// func init() {
-	// 	Foo()    // Local package - name is omitted.
-	// 	f.Bar()  // Import is automatically added.
-	// 	f1.Baz() // Colliding package name is renamed.
+	// 	Foo()     // Local package - name is omitted.
+	// 	f.Bar()   // Import is automatically added.
+	// 	ghf.Baz() // Colliding package name is renamed.
 	// }
 }
 

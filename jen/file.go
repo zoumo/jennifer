@@ -2,7 +2,7 @@ package jen
 
 import (
 	"bytes"
-	"fmt"
+	gopath "path"
 	"regexp"
 	"strings"
 	"unicode"
@@ -188,12 +188,20 @@ func (f *File) register(path string) string {
 		alias = true
 	}
 
-	// If the name is invalid or has been registered already, make it unique by appending a number
+	// If the name is invalid or has been registered already, calculate an import alias by joining
+	// path parts utill we get something unique not just appending a number
 	unique := name
-	i := 0
+	restPath := path
 	for !f.isValidAlias(unique) {
-		i++
-		unique = fmt.Sprintf("%s%d", name, i)
+		// otherwise, calculate an import alias by joining path parts till we get something unique
+		restPath, _ = gopath.Split(restPath)
+		if restPath == "" {
+			unique += "x"
+		} else {
+			nextWord := guessAlias(restPath)
+			unique = nextWord + unique
+			restPath = restPath[:len(restPath)-1]
+		}
 	}
 
 	// If we've changed the name to make it unique, it should definitely be an alias
