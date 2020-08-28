@@ -49,3 +49,59 @@ func TestValidAlias(t *testing.T) {
 		}
 	}
 }
+
+func TestFile_register(t *testing.T) {
+	data := newOrderedMap()
+	data.Add("v1", "v1")
+	data.Add("meta.v1", "metav1")
+	data.Add("metav1", "metav1x")
+	data.Add("meta-v1", "metav1xx")
+	data.Add("meta/v1", "metav1xxx")
+	data.Add("github.com/xxx/foo.abc", "fooabc")
+	data.Add("github.com/xxx/fooabc", "xxxfooabc")
+	data.Add("github.com/xxx/fooa.bc", "githubcomxxxfooabc")
+	data.Add("aaa/bbb/123ccc", "ccc")
+	data.Add("aaa/123bbb/123ccc", "bbbccc")
+
+	f := NewFile("test")
+
+	data.Range(func(path, alias string) bool {
+		got := f.register(path)
+		if got != alias {
+			fmt.Printf("register test failed %s should return %s but got %s\n", path, alias, got)
+			t.Fail()
+		}
+		return true
+	})
+}
+
+type orderedMap struct {
+	order []string
+	data  map[string]string
+}
+
+func newOrderedMap() *orderedMap {
+	return &orderedMap{
+		order: make([]string, 0),
+		data:  make(map[string]string),
+	}
+}
+
+func (m *orderedMap) Add(k, v string) {
+	_, ok := m.data[k]
+	if ok {
+		return
+	}
+
+	m.data[k] = v
+	m.order = append(m.order, k)
+}
+
+func (m *orderedMap) Range(visit func(k, v string) bool) {
+	for _, k := range m.order {
+		v := m.data[k]
+		if !visit(k, v) {
+			break
+		}
+	}
+}
